@@ -18,7 +18,7 @@ def draw_graph(root):
     for node in nodes:
         uid = str(id(node))
 
-        painter.node(name=uid, label=f'{{{node.label} | {node.data} | {node.grad}}}', shape='record')
+        painter.node(name=uid, label=f'{{{node.label} | data: {node.data:.4f} | grad: {node.grad:.4f}}}', shape='record')
         if node._op:
             painter.node(name=uid+node._op, label=node._op)
             painter.edge(uid+node._op, uid)
