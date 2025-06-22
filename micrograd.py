@@ -18,9 +18,6 @@ class Value:
         def _backward():
             self.grad += 1.0 * output.grad
             other.grad += 1.0 * output.grad
-
-            self._backward()
-            other._backward()
         output._backward = _backward
 
         return output
@@ -41,8 +38,6 @@ class Value:
 
         def _backward():
             self.grad += pow * (self.data ** (pow-1)) * output.grad
-
-            self._backward()
         output._backward = _backward
 
         return output
@@ -55,9 +50,6 @@ class Value:
         def _backward():
             self.grad += other.data * output.grad
             other.grad += self.data * output.grad
-
-            self._backward()
-            other._backward()
         output._backward = _backward
 
         return output
@@ -76,7 +68,6 @@ class Value:
         def _backward():
             self.grad += x * output.grad
 
-            self._backward()
         output._backward = _backward
 
         return output
@@ -88,13 +79,24 @@ class Value:
 
         def _backward():
             self.grad += (1-x**2) * output.grad
-
-            self._backward()
         output._backward = _backward
 
         return output
  
     def backward(self):
+        topo = []
+        visited = set()
+
+        def fill(node):
+            if node in visited: return
+            visited.add(node)
+            for child in node._prev:
+                fill(child)
+            topo.append(node)
+
+        fill(self)
+        
         self.grad = 1
-        self._backward()
+        for node in reversed(topo):
+            node._backward()
        
