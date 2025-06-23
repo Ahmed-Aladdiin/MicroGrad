@@ -99,4 +99,10 @@ class Value:
         self.grad = 1
         for node in reversed(topo):
             node._backward()
+    
+    def zero_grad(self):
+        self.grad = 0
+
+        for pre in self._prev:
+            pre.zero_grad()
        
