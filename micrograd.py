@@ -102,7 +102,3 @@ class Value:
     
     def zero_grad(self):
         self.grad = 0
-
-        for pre in self._prev:
-            pre.zero_grad()
-       
